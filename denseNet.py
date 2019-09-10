@@ -3,18 +3,18 @@ from keras.preprocessing import image
 from keras import models, layers, optimizers
 import numpy as np
 
-densenet = DenseNet201(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+densenet = DenseNet201(weights='imagenet', input_shape=(224, 224, 3))
 
 # Freeze the layers except the last 4 layers
-for layer in densenet.layers[:-4]:
+for layer in densenet.layers[:-1]:
     layer.trainable = False
 
 model = models.Sequential()
 model.add(densenet)
 # Add new layers
-model.add(layers.Flatten())
-model.add(layers.Dense(1024, activation='relu'))
-model.add(layers.Dropout(0.5))
+# model.add(layers.Flatten())
+# model.add(layers.Dense(1024, activation='relu'))
+# model.add(layers.Dropout(0.5))
 model.add(layers.Dense(2, activation='softmax'))
  
 # Show a summary of the model. Check the number of trainable parameters
@@ -32,21 +32,21 @@ validation_dir = '/Users/isamuriel/Semillero_IA_2019/DATASET/TEST'
  
 train_generator = train_datagen.flow_from_directory(
                                                     train_dir,
-                                                    target_size = (224, 224, 3),
+                                                    target_size = (224, 224),
                                                     batch_size = train_batchsize,
                                                     class_mode = 'binary'
                                                     )
  
 validation_generator = validation_datagen.flow_from_directory(
                                                             validation_dir,
-                                                            target_size = (224, 224, 3),
+                                                            target_size = (224, 224),
                                                             batch_size = val_batchsize,
                                                             class_mode = 'binary',
                                                             )
 
 # Compile the model
 model.compile(
-            loss = 'categorical_crossentropy', 
+            loss = 'sparse_categorical_crossentropy', 
             optimizer = optimizers.RMSprop(lr=1e-4),
             metrics = ['acc']
             )
