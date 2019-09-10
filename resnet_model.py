@@ -6,8 +6,8 @@ from keras.preprocessing import image
 TRAIN_DIR_Rafael = "../waste-classification-data/DATASET/TRAIN/"
 VAL_DIR_Rafael = "../waste-classification-data/DATASET/TEST/"
 
-TRAIN_BATCHSIZE = 32
-VAL_BATCHSIZE = 32
+TRAIN_BATCHSIZE = 64
+VAL_BATCHSIZE = 64
 
 # TRAIN_DIR_Pedro = "C:\\Users\\pedro\\OneDrive\\Documentos\\Artificial Inteligence\\DATASET"
 
@@ -47,7 +47,7 @@ validation_generator = val_datagen.flow_from_directory(
     class_mode="binary"
 )
 
-new_model.compile(loss="categorical_crossentropy",
+new_model.compile(loss="sparse_categorical_crossentropy",
                   optimizer=optimizers.RMSprop(lr=1e-4),
                   metrics=["acc"])
 
