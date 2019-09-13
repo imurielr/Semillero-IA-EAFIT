@@ -3,6 +3,9 @@ from keras import models, layers, optimizers
 from keras.applications.resnet50 import ResNet50, preprocess_input, decode_predictions
 from keras.preprocessing import image
 
+TRAIN_DIR_Apolo = "../waste-classification-data/DATASET/TRAIN/"
+TRAIN_VAL_Apolo = "../waste-classification-data/DATASET/TRAIN/"
+
 TRAIN_DIR_Rafael = "../waste-classification-data/DATASET/TRAIN/"
 VAL_DIR_Rafael = "../waste-classification-data/DATASET/TEST/"
 
