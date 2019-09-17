@@ -1,9 +1,9 @@
-from keras.applications.densenet import DenseNet201, preprocess_input, decode_predictions
+from keras.applications.densenet import DenseNet121, preprocess_input, decode_predictions
 from keras.preprocessing import image
 from keras import models, layers, optimizers
 import numpy as np
 
-densenet = DenseNet201(weights='imagenet', input_shape=(224, 224, 3))
+densenet = DenseNet121(weights='imagenet', input_shape=(224, 224, 3))
 
 # Freeze the layers except the last 4 layers
 for layer in densenet.layers[:-1]:
@@ -31,18 +31,18 @@ train_dir = '../DATASET/TRAIN'
 validation_dir = '../DATASET/TEST'
  
 train_generator = train_datagen.flow_from_directory(
-                                                    train_dir,
-                                                    target_size = (224, 224),
-                                                    batch_size = train_batchsize,
-                                                    class_mode = 'binary'
-                                                    )
+    train_dir,
+    target_size = (224, 224),
+    batch_size = train_batchsize,
+    class_mode = 'binary'
+)
  
 validation_generator = validation_datagen.flow_from_directory(
-                                                            validation_dir,
-                                                            target_size = (224, 224),
-                                                            batch_size = val_batchsize,
-                                                            class_mode = 'binary',
-                                                            )
+    validation_dir,
+    target_size = (224, 224),
+    batch_size = val_batchsize,
+    class_mode = 'binary',
+)
 
 # Compile the model
 model.compile(
