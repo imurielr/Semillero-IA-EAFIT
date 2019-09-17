@@ -27,8 +27,8 @@ validation_datagen = image.ImageDataGenerator()
 train_batchsize = 32
 val_batchsize = 32
 
-train_dir = '../DATASET/TRAIN'
-validation_dir = '../DATASET/TEST'
+train_dir = 'DATASET/TRAIN'
+validation_dir = 'DATASET/TEST'
  
 train_generator = train_datagen.flow_from_directory(
     train_dir,
