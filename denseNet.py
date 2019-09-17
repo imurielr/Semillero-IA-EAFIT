@@ -46,20 +46,20 @@ validation_generator = validation_datagen.flow_from_directory(
 
 # Compile the model
 model.compile(
-            loss = 'sparse_categorical_crossentropy', 
-            optimizer = optimizers.RMSprop(lr=1e-4),
-            metrics = ['acc']
-            )
+    loss = 'sparse_categorical_crossentropy', 
+    optimizer = optimizers.RMSprop(lr=1e-4),
+    metrics = ['acc']
+)
 
 # Train the model
 history = model.fit_generator(
-                            train_generator,
-                            steps_per_epoch = train_generator.samples / train_generator.batch_size,
-                            epochs = 30,
-                            validation_data = validation_generator,
-                            validation_steps = validation_generator.samples / validation_generator.batch_size,
-                            verbose = 1
-                            )
+    train_generator,
+    steps_per_epoch = train_generator.samples / train_generator.batch_size,
+    epochs = 30,
+    validation_data = validation_generator,
+    validation_steps = validation_generator.samples / validation_generator.batch_size,
+    verbose = 1
+)
 
 # Save the model
 model.save('densenet.h5')
