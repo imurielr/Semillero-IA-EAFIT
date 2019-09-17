@@ -1,18 +1,17 @@
 import numpy as np
+from time import time
 from keras import models, layers, optimizers
 from keras.applications.resnet50 import ResNet50, preprocess_input, decode_predictions
 from keras.preprocessing import image
 
-TRAIN_DIR_Apolo = "../waste-classification-data/DATASET/TRAIN/"
-TRAIN_VAL_Apolo = "../waste-classification-data/DATASET/TRAIN/"
+import tensorflow as tf
+from tensorflow.python.keras.callbacks import TensorBoard
 
-TRAIN_DIR_Rafael = "../waste-classification-data/DATASET/TRAIN/"
-VAL_DIR_Rafael = "../waste-classification-data/DATASET/TEST/"
+TRAIN_DIR_Apolo = "../waste-classification-data/DATASET/TRAIN/"
+VAL_DIR_Apolo = "../waste-classification-data/DATASET/TRAIN/"
 
 TRAIN_BATCHSIZE = 64
 VAL_BATCHSIZE = 64
-
-# TRAIN_DIR_Pedro = "C:\\Users\\pedro\\OneDrive\\Documentos\\Artificial Inteligence\\DATASET"
 
 resnet_model = ResNet50(weights="imagenet", input_shape=(224, 224, 3))
 
@@ -37,33 +36,40 @@ train_datagen = image.ImageDataGenerator()
 val_datagen = image.ImageDataGenerator()
 
 train_generator = train_datagen.flow_from_directory(
-    TRAIN_DIR_Rafael,
+    TRAIN_DIR_Apolo,
     target_size=(224,224),
     batch_size=TRAIN_BATCHSIZE,
     class_mode="binary"
 )
 
 validation_generator = val_datagen.flow_from_directory(
-    VAL_DIR_Rafael,
+    VAL_DIR_Apolo,
     target_size=(224,224),
     batch_size=VAL_BATCHSIZE,
     class_mode="binary"
 )
 
-new_model.compile(loss="sparse_categorical_crossentropy",
-                  optimizer=optimizers.RMSprop(lr=1e-4),
-                  metrics=["acc"])
+for opt in [optimizers.Adadelta(), optimizers.Adagrad(), optimizers.Adam(), optimizers.RMSprop()]:
 
-history = new_model.fit_generator(
-    train_generator,
-    steps_per_epoch=train_generator.samples/train_generator.batch_size,
-    epochs=30,
-    validation_data=validation_generator,
-    validation_steps=validation_generator.samples/validation_generator.batch_size,
-    verbose=1
-)
+    opt = tf.train.experimental.enable_mixed_precision_graph_rewrite(opt)
 
-new_model.save("resnet.h5")
+    tensorboard = TensorBoard(log_dir=f"logs/{opt}_{time}")
+
+    new_model.compile(loss="sparse_categorical_crossentropy",
+                    optimizer=opt,
+                    metrics=["acc"])
+
+    history = new_model.fit_generator(
+        train_generator,
+        steps_per_epoch=train_generator.samples/train_generator.batch_size,
+        epochs=30,
+        callbacks=[tensorboard],
+        validation_data=validation_generator,
+        validation_steps=validation_generator.samples/validation_generator.batch_size,
+        verbose=1
+    )
+
+    new_model.save(f"resnet_{opt}.h5")
 
 
 
