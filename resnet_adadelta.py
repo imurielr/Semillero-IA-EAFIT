@@ -67,4 +67,4 @@ history = new_model.fit_generator(
     verbose=1
 )
 
-new_model.save(f"resnet_{opt}.h5")
+new_model.save(f"/trained_models/resnet_{opt}.h5")
