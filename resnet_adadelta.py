@@ -1,9 +1,10 @@
 from time import time
-from keras import models, layers, optimizers
+from keras import models, layers
 from keras.applications.resnet50 import ResNet50, preprocess_input, decode_predictions
 from keras.preprocessing import image
 
 import tensorflow as tf
+from tf.keras import optimizers
 from tensorflow.python.keras.callbacks import TensorBoard
 
 TRAIN_DIR_Apolo = "waste-classification-data/DATASET/TRAIN/"
