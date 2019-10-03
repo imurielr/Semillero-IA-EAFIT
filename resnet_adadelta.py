@@ -8,7 +8,7 @@ from tf.keras import optimizers
 from tensorflow.python.keras.callbacks import TensorBoard
 
 TRAIN_DIR_Apolo = "waste-classification-data/DATASET/TRAIN/"
-VAL_DIR_Apolo = "waste-classification-data/DATASET/TRAIN/"
+VAL_DIR_Apolo = "waste-classification-data/DATASET/TEST/"
 
 TRAIN_BATCHSIZE = 64
 VAL_BATCHSIZE = 64
