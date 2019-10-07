@@ -49,7 +49,7 @@ validation_generator = val_datagen.flow_from_directory(
 )
 
 opt = optimizers.Adagrad()
-opt = tf.train.experimental.enable_mixed_precision_graph_rewrite(opt)
+# opt = tf.train.experimental.enable_mixed_precision_graph_rewrite(opt)
 
 tensorboard = TensorBoard(log_dir=f"logs/resnet/{opt}_{time}")
 
