@@ -35,24 +35,26 @@ def save_to_new_dataset(image_file_path, categories_dir, category_chosen):
 
 def organize_files(dir_to_organize, categories_dir, NEW_CATEGORIES):
     image_files = sort_files(dir_to_organize)
-    message_classify = ""
-    for index, category in NEW_CATEGORIES.items():
-        message_classify += "Type {} to choose {} and -1 to exit\n".format(index, category)
     
     first_number = int(get_number(image_files[0]))
     last_number = int(get_number(image_files[-1]))
     message_index = "Type an index to start from {} to {}: ".format(first_number, last_number)
-    
-    answer = input(message_index)
+    # get an index to start
     while True:
         try:
+            answer = input(message_index)
             from_index = int(answer)
             if from_index < first_number or from_index > last_number:
                 raise Exception("Index out of range")
             break
         except Exception as e:
             print(e)
-    from_index = from_index - first_number
+    
+    message_classify = ""
+    for index, category in NEW_CATEGORIES.items():
+        message_classify += "Type {} to choose {} and -1 to exit\n".format(index, category)
+
+    from_index -= first_number
     for i in range(from_index, len(image_files)):
         image_file = image_files[i]
         image_file_path = join(dir_to_organize, image_file)
@@ -65,9 +67,9 @@ def organize_files(dir_to_organize, categories_dir, NEW_CATEGORIES):
                sys.exit(0)
             if index_chosen in NEW_CATEGORIES.keys():
                 break
-            print("Error in the input, remeber:", message_classify)
-        
+            print("Error in the input, remember:", message_classify)
         save_to_new_dataset(image_file_path, categories_dir, NEW_CATEGORIES[index_chosen])
+    
     print("Finished")
 
 if __name__== "__main__":
@@ -93,6 +95,7 @@ if __name__== "__main__":
             print(e)
     
     print()
+
     DATASET_DIR = "waste-classification-data/DATASET/"
     NEW_DATASET_DIR = "NEW_DATASET"
     NEW_CATEGORIES = {"0" :"Recyclable", "1": "Ordinary", "2": "Organic"}
@@ -108,10 +111,11 @@ if __name__== "__main__":
         dir_to_organize =  join(dir_to_organize, "O")
     else:
         dir_to_organize =  join(dir_to_organize, "R")
-
+    
     if not exists(dir_to_organize):
         raise Exception("The path {} doesn't exist".format(dir_to_organize))
-        
+    
+    # create dirs for the new dataset    
     for category in NEW_CATEGORIES.values():
         category_dir = join(categories_dir, category)
         if not exists(category_dir):
