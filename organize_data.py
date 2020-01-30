@@ -5,9 +5,15 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import re
 import sys
-import argparse
+
 
 def show_image(image_file_path, image_file_name):
+    """
+    Show a image in a new window. 
+    Arguments:
+        image_file_path  -- the full image path
+        image_file_name  -- the name of the image
+    """
     image = plt.imread(image_file_path)
     fig, ax = plt.subplots()
     ax.imshow(image)
@@ -16,10 +22,25 @@ def show_image(image_file_path, image_file_name):
     plt.show()
 
 def get_number(filename):
-    filename_parts = re.split("_|\.", filename)
+    """Get the number from a photo name, for example we want to get 12568 from O_12568.jpg
+    
+    Arguments:
+        filename -- A photo name including the extension.
+    Returns:
+        int -- The number from the photo name
+    """
+    filename_parts = re.split("_|\.", filename) # For example the image O_12568.jpg to get [O, 12568, jpg]
     return int(filename_parts[1])
 
-def sort_files(dir_to_organize):
+def get_image_filenames(dir_to_organize):
+    """
+    Get the list with all the image filenames from the directory to organize
+    Arguments:
+        dir_to_organize -- The path to the directory that will be organized
+    
+    Returns:
+        list --A with all the image filenames from the directory to organize
+    """
     image_files = []
     for namefile in listdir(dir_to_organize):
         if namefile.endswith(".jpg"):
@@ -34,11 +55,22 @@ def save_to_new_dataset(image_file_path, categories_dir, category_chosen):
     image.save(new_image_file_path)
 
 def organize_files(dir_to_organize, categories_dir, NEW_CATEGORIES):
-    image_files = sort_files(dir_to_organize)
+    """
+    Execute the program to let to the user organize the data.
+    Arguments:
+        dir_to_organize  -- The path to the directory that will be organized
+        categories_dir  --  The path to save the photos with the new label
+        NEW_CATEGORIES  --  The dictionary with all the names of the new categories.
     
-    first_number = int(get_number(image_files[0]))
-    last_number = int(get_number(image_files[-1]))
-    message_index = "Type an index to start from {} to {}: ".format(first_number, last_number)
+    Raises:
+        Exception: If you type an incorrect index
+    """
+    image_files = get_image_filenames(dir_to_organize)
+    
+    first_number = int(get_number(image_files[0])) # The first number of the photos in the directory to organize
+    last_number = int(get_number(image_files[-1])) # The last number of the photos in the directory to organize
+    message_index = "Type an index to start, it has to be from {} to {}: ".format(first_number, last_number)
+    
     # get an index to start
     while True:
         try:
@@ -54,7 +86,7 @@ def organize_files(dir_to_organize, categories_dir, NEW_CATEGORIES):
     for index, category in NEW_CATEGORIES.items():
         message_classify += "Type {} to choose {} and -1 to exit\n".format(index, category)
 
-    from_index -= first_number
+    from_index -= first_number # To get the list position of the "index to start"
     for i in range(from_index, len(image_files)):
         image_file = image_files[i]
         image_file_path = join(dir_to_organize, image_file)
@@ -72,7 +104,14 @@ def organize_files(dir_to_organize, categories_dir, NEW_CATEGORIES):
     
     print("Finished")
 
+def usage():
+    print("You have to include the path of the dataset")
+    exit(1)
+
 if __name__== "__main__":
+    if len(sys.argv) <= 1:
+        usage()
+   
     while True:
         try:
             answer = input("Type 0 to organize train images or 1 to organize test images: ")
@@ -96,7 +135,7 @@ if __name__== "__main__":
     
     print()
 
-    DATASET_DIR = "waste-classification-data/DATASET/"
+    DATASET_DIR = sys.argv[1]
     NEW_DATASET_DIR = "NEW_DATASET"
     NEW_CATEGORIES = {"0" :"Recyclable", "1": "Ordinary", "2": "Organic"}
 
